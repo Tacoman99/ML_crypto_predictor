@@ -9,5 +9,5 @@ As the duration of the course will be the same as in cohort 1 (which means 4 or 
 a existing code from the first cohort. Which means that I won't be typing it from beginning to end, but copying fragments of code and walking you through their WHY? and HOW?
 
 <div align="center">
-    <img src="./media/ml_system_cohort_2.gif" width='500' />
+    <img src="./media/ml_system_cohort_2.gif" width='750' />
 </div>
