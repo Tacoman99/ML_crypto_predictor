@@ -11,3 +11,13 @@ a existing code from the first cohort. Which means that I won't be typing it fro
 <div align="center">
     <img src="./media/ml_system_cohort_2.gif" width='750' />
 </div>
+
+
+## Session 1 todos
+
+
+- [x] Redpanda up and running
+- [x] Push some fake data to Redpanda
+- [x] Push real-time (real data) from Kafka
+- [ ] Extract config parameters
+- [ ] Dockerize it
