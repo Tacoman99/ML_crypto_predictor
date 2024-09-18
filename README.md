@@ -19,5 +19,16 @@ a existing code from the first cohort. Which means that I won't be typing it fro
 - [x] Redpanda up and running
 - [x] Push some fake data to Redpanda
 - [x] Push real-time (real data) from Kraken websocket API
+
+## Session 2
+
 - [x] Extract config parameters
 - [x] Dockerize it
+- [ ] Homework -> adjust the code so that instead of a single product_id, the trade_producer
+produces data for several product_ids = ['BTC/USD', 'BTC/EUR']
+    My thoughts: you will need to update
+        * the config types
+        * the Kraken Websocket API class
+
+
+- [x] Trade to ohlc service
