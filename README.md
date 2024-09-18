@@ -18,6 +18,6 @@ a existing code from the first cohort. Which means that I won't be typing it fro
 
 - [x] Redpanda up and running
 - [x] Push some fake data to Redpanda
-- [x] Push real-time (real data) from Kafka
-- [ ] Extract config parameters
-- [ ] Dockerize it
+- [x] Push real-time (real data) from Kraken websocket API
+- [x] Extract config parameters
+- [x] Dockerize it
