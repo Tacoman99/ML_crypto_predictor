@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import List
 import json
 from websocket import create_connection
@@ -122,7 +123,7 @@ class KrakenWebsocketAPI:
         # into a datetime object assuming UTC timezone
         # and then transform this datetime object into Unix timestamp
         # expressed in milliseconds
-        from datetime import datetime, timezone
+        
 
         timestamp = datetime.fromisoformat(timestamp[:-1]).replace(tzinfo=timezone.utc)
         return int(timestamp.timestamp() * 1000)
