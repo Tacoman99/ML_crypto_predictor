@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic_settings import BaseSettings
 
 class AppConfig(BaseSettings):
@@ -6,6 +8,9 @@ class AppConfig(BaseSettings):
     kafka_topic: str
     product_id: str
 
+    live_or_historical: Optional[str] = None
+    last_n_days: Optional[int] = None
+    
     # this is the first time I use this construct to load the environment variables from
     # an .env file
     # I used another method in the past, which Jason Singer found during the live session
