@@ -5,8 +5,18 @@ import pandas as pd
 
 from src.config import hopsworks_config as config
 
+# connect to ours Hopsworks project
+project = hopsworks.login(
+    project=config.hopsworks_project_name,
+    api_key_value=config.hopsworks_api_key
+)
+
+# get a handle to the Feature Store
+feature_store = project.get_feature_store()
+
+
 def push_value_to_feature_group(
-    value: dict,
+    value: List[dict],
     feature_group_name: str,
     feature_group_version: int,
     feature_group_primary_keys: List[str],
@@ -17,7 +27,7 @@ def push_value_to_feature_group(
     Pushes the given `value` to the given `feature_group_name` in the Feature Store.
 
     Args:
-        value (dict): The value to push to the Feature Store
+        value (List[dict]): The value to push to the Feature Store
         feature_group_name (str): The name of the Feature Group
         feature_group_version (int): The version of the Feature Group
         feature_group_primary_keys (List[str]): The primary key of the Feature Group
@@ -28,17 +38,6 @@ def push_value_to_feature_group(
     Returns:
         None
     """
-    # breakpoint()
-
-    # connect to ours Hopsworks project
-    project = hopsworks.login(
-        project=config.hopsworks_project_name,
-        api_key_value=config.hopsworks_api_key
-    )
-
-    # get a handle to the Feature Store
-    feature_store = project.get_feature_store()
-
     # get a handle to the Feature Group we want to save the `value` to
     feature_group = feature_store.get_or_create_feature_group(
         name=feature_group_name,
@@ -52,7 +51,7 @@ def push_value_to_feature_group(
     )
 
     # transform the value dict into a pandas DataFrame
-    value_df = pd.DataFrame([value])
+    value_df = pd.DataFrame(value)
 
     # breakpoint()
 

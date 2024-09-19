@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic_settings import BaseSettings
 
@@ -13,6 +13,7 @@ class AppConfig(BaseSettings):
     feature_group_primary_keys: List[str]
     feature_group_event_time: str
     start_offline_materialization: bool
+    batch_size: Optional[int] = 1
 
     class Config:
         env_file = ".env"

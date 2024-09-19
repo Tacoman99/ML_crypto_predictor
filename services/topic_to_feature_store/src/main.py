@@ -15,6 +15,7 @@ def topic_to_feature_store(
     feature_group_primary_keys: List[str],
     feature_group_event_time: str,
     start_offline_materialization: bool,
+    batch_size: int,
 ):
     """
     Reads incoming messages from the given `kafka_input_topic`, and pushes them to the
@@ -30,6 +31,8 @@ def topic_to_feature_store(
         feature_group_event_time (str): The event time of the Feature Group
         start_offline_materialization (bool): Whether to start the offline
             materialization or not when we save the `value` to the feature group
+        batch_size (int): The number of messages to accumulate in-memory before pushing
+            to the Feature Store
 
     Returns:
         None
@@ -40,6 +43,8 @@ def topic_to_feature_store(
         broker_address=kafka_broker_address,  
         consumer_group=kafka_consumer_group,
     )
+
+    batch = []
 
     # Create a consumer and start a polling loop
     with app.get_consumer() as consumer:
@@ -61,8 +66,17 @@ def topic_to_feature_store(
             import json
             value = json.loads(value.decode('utf-8'))
             
+            # Append the message to the batch
+            batch.append(value)
+
+            # If the batch is not full yet, continue polling
+            if len(batch) < batch_size:
+                logger.debug(f'Batch has size {len(batch)} < {batch_size}...')
+                continue
+            
+            logger.debug(f'Batch has size {len(batch)} >= {batch_size}... Pushing data to Feature Store')
             push_value_to_feature_group(
-                value,
+                batch,
                 feature_group_name,
                 feature_group_version,
                 feature_group_primary_keys,
@@ -70,10 +84,8 @@ def topic_to_feature_store(
                 start_offline_materialization,
             )
 
-            # breakpoint()
-
-            # we need to push the value to the Feature Store here
-
+            # Clear the batch
+            batch = []
             
             # Store the offset of the processed message on the Consumer 
             # for the auto-commit mechanism.
@@ -95,4 +107,5 @@ if __name__ == "__main__":
         feature_group_primary_keys=config.feature_group_primary_keys,
         feature_group_event_time=config.feature_group_event_time,
         start_offline_materialization=config.start_offline_materialization,
+        batch_size=config.batch_size,
     )
