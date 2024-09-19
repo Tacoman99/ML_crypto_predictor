@@ -13,7 +13,7 @@ def init_ohlcv_candle(trade: dict):
         'low': trade['price'],
         'close': trade['price'],
         'volume': trade['quantity'],
-        # 'timestamp_ms': None,
+        'product_id': trade['product_id'],
     }
 
 def update_ohlcv_candle(candle: dict, trade: dict):
@@ -24,6 +24,7 @@ def update_ohlcv_candle(candle: dict, trade: dict):
     candle['low'] = min(candle['low'], trade['price'])
     candle['close'] = trade['price']
     candle['volume'] += trade['quantity']
+    candle['product_id'] = trade['product_id']
     # candle['timestamp_ms'] = trade['timestamp_ms']
 
     return candle
@@ -68,8 +69,8 @@ def transform_trade_to_ohlcv(
     sdf = (
         sdf.tumbling_window(duration_ms=timedelta(seconds=ohlcv_window_seconds))
         .reduce(reducer=update_ohlcv_candle, initializer=init_ohlcv_candle)
-        .final()
-        # .current()
+        # .final()
+        .current()
     )
 
     # unpack the dictionary into separate columns
@@ -78,10 +79,11 @@ def transform_trade_to_ohlcv(
     sdf['low'] = sdf['value']['low']
     sdf['close'] = sdf['value']['close']
     sdf['volume'] = sdf['value']['volume']
+    sdf['product_id'] = sdf['value']['product_id']
     sdf['timestamp_ms'] = sdf['end']
 
     # keep only the columns we are interested in
-    sdf = sdf[['timestamp_ms', 'open', 'high', 'low', 'close', 'volume']]
+    sdf = sdf[['product_id', 'timestamp_ms', 'open', 'high', 'low', 'close', 'volume']]
 
     # print the output to the console
     sdf.update(logger.debug)
