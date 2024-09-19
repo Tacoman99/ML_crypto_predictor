@@ -12,6 +12,7 @@ class AppConfig(BaseSettings):
     feature_group_version: int
     feature_group_primary_keys: List[str]
     feature_group_event_time: str
+    start_offline_materialization: bool
 
     class Config:
         env_file = ".env"

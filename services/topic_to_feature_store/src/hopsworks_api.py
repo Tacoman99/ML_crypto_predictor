@@ -11,6 +11,7 @@ def push_value_to_feature_group(
     feature_group_version: int,
     feature_group_primary_keys: List[str],
     feature_group_event_time: str,
+    start_offline_materialization: bool,
 ):
     """
     Pushes the given `value` to the given `feature_group_name` in the Feature Store.
@@ -21,19 +22,24 @@ def push_value_to_feature_group(
         feature_group_version (int): The version of the Feature Group
         feature_group_primary_keys (List[str]): The primary key of the Feature Group
         feature_group_event_time (str): The event time of the Feature Group
+        start_offline_materialization (bool): Whether to start the offline
+            materialization or not when we save the `value` to the feature group
 
     Returns:
         None
     """
-    breakpoint()
-    
+    # breakpoint()
+
+    # connect to ours Hopsworks project
     project = hopsworks.login(
         project=config.hopsworks_project_name,
-        api_key=config.hopsworks_api_key,
+        api_key_value=config.hopsworks_api_key
     )
 
+    # get a handle to the Feature Store
     feature_store = project.get_feature_store()
 
+    # get a handle to the Feature Group we want to save the `value` to
     feature_group = feature_store.get_or_create_feature_group(
         name=feature_group_name,
         version=feature_group_version,
@@ -48,5 +54,10 @@ def push_value_to_feature_group(
     # transform the value dict into a pandas DataFrame
     value_df = pd.DataFrame([value])
 
+    # breakpoint()
+
     # push the value to the Feature Store
-    feature_group.insert(value_df)
+    feature_group.insert(
+        value_df,
+        write_options={"start_offline_materialization" : start_offline_materialization}
+    )

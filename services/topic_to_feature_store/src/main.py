@@ -14,6 +14,7 @@ def topic_to_feature_store(
     feature_group_version: int,
     feature_group_primary_keys: List[str],
     feature_group_event_time: str,
+    start_offline_materialization: bool,
 ):
     """
     Reads incoming messages from the given `kafka_input_topic`, and pushes them to the
@@ -27,6 +28,8 @@ def topic_to_feature_store(
         feature_group_version (int): The version of the Feature Group
         feature_group_primary_keys (List[str]): The primary key of the Feature Group
         feature_group_event_time (str): The event time of the Feature Group
+        start_offline_materialization (bool): Whether to start the offline
+            materialization or not when we save the `value` to the feature group
 
     Returns:
         None
@@ -64,6 +67,7 @@ def topic_to_feature_store(
                 feature_group_version,
                 feature_group_primary_keys,
                 feature_group_event_time,
+                start_offline_materialization,
             )
 
             # breakpoint()
@@ -90,4 +94,5 @@ if __name__ == "__main__":
         feature_group_version=config.feature_group_version,
         feature_group_primary_keys=config.feature_group_primary_keys,
         feature_group_event_time=config.feature_group_event_time,
+        start_offline_materialization=config.start_offline_materialization,
     )
